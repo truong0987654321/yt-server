@@ -18,6 +18,17 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	DBSSLMode  string
+
+	JWTAccessSecret     string
+	JWTRefreshSecret    string
+	JWTAccessTTLMinutes int
+	JWTRefreshTTLDays   int
+
+	GoogleClientID     string
+	GoogleClientSecret string
+	GoogleRedirectURL  string
+
+	FrontendCallbackURL string
 }
 
 func Load() *Config {
@@ -34,6 +45,17 @@ func Load() *Config {
 		DBPassword: mustGetEnv("DB_PASSWORD"),
 		DBName:     getEnv("DB_NAME", "yt_clone"),
 		DBSSLMode:  getEnv("DB_SSL_MODE", "disable"),
+
+		JWTAccessSecret:     mustGetEnv("JWT_ACCESS_SECRET"),
+		JWTRefreshSecret:    mustGetEnv("JWT_REFRESH_SECRET"),
+		JWTAccessTTLMinutes: getEnvAsInt("JWT_ACCESS_TTL_MINUTES", 15),
+		JWTRefreshTTLDays:   getEnvAsInt("JWT_REFRESH_TTL_DAYS", 30),
+
+		GoogleClientID:     mustGetEnv("GOOGLE_CLIENT_ID"),
+		GoogleClientSecret: mustGetEnv("GOOGLE_CLIENT_SECRET"),
+		GoogleRedirectURL:  mustGetEnv("GOOGLE_REDIRECT_URL"),
+
+		FrontendCallbackURL: getEnv("FRONTEND_CALLBACK_URL", "http://localhost:3000/auth/callback"),
 	}
 }
 
