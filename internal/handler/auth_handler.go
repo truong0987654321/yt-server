@@ -45,6 +45,7 @@ func (h *AuthHandler) GoogleCallback(c *gin.Context) {
 	if err != nil {
 		appErr := apperrors.Parse(err)
 		c.JSON(appErr.Status(), appErr)
+		return
 	}
 
 	// Redirect về Next.js kèm token. Production nên cân nhắc dùng httpOnly cookie

@@ -9,9 +9,10 @@ import (
 )
 
 type Dependencies struct {
-	AuthHandler *handler.AuthHandler
-	UserHandler *handler.UserHandler
-	JWTService  *service.JWTService
+	AuthHandler     *handler.AuthHandler
+	UserHandler     *handler.UserHandler
+	CategoryHandler *handler.CategoryHandler
+	JWTService      *service.JWTService
 }
 
 func Setup(deps Dependencies) *gin.Engine {
@@ -34,6 +35,15 @@ func Setup(deps Dependencies) *gin.Engine {
 	users.Use(middleware.RequireAuth(deps.JWTService)) // mọi route trong nhóm này bắt buộc có JWT
 	{
 		users.GET("/me", deps.UserHandler.Me)
+	}
+
+	categories := api.Group("/categories")
+	{
+		categories.GET("", deps.CategoryHandler.GetAll)
+		categories.GET("/:id", deps.CategoryHandler.GetByID)
+		categories.POST("", deps.CategoryHandler.Create)
+		categories.PUT("/:id", deps.CategoryHandler.Update)
+		categories.DELETE("/:id", deps.CategoryHandler.Delete)
 	}
 
 	r.GET("/health", func(c *gin.Context) {

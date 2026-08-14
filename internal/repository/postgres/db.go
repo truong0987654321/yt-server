@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 	"yt-clone-server/internal/config"
+	"yt-clone-server/internal/domain"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -29,6 +30,14 @@ func NewConnection(cfg *config.Config) (*gorm.DB, error) {
 	}
 
 	db.Exec(`CREATE EXTENSION IF NOT EXISTS "pgcrypto"`)
+
+	if err := db.AutoMigrate(
+		&domain.User{},
+		&domain.RefreshToken{},
+		&domain.Category{},
+	); err != nil {
+		return nil, fmt.Errorf("Failed to run database migrations: %w", err)
+	}
 
 	return db, nil
 }
