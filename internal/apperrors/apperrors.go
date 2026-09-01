@@ -17,7 +17,7 @@ const (
 
 // ServerError là message mặc định khi có lỗi hệ thống (DB down, bug...),
 // không muốn lộ chi tiết thật (vd câu lỗi SQL) ra ngoài cho client.
-const ServerError = "Đã có lỗi xảy ra, vui lòng thử lại sau."
+const ServerError = "Something went wrong. Please try again later."
 
 type Error struct {
 	Type    Type   `json:"type"`

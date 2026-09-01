@@ -12,6 +12,7 @@ type Dependencies struct {
 	AuthHandler     *handler.AuthHandler
 	UserHandler     *handler.UserHandler
 	CategoryHandler *handler.CategoryHandler
+	ChannelHandler  *handler.ChannelHandler
 	JWTService      *service.JWTService
 }
 
@@ -44,6 +45,22 @@ func Setup(deps Dependencies) *gin.Engine {
 		categories.POST("", deps.CategoryHandler.Create)
 		categories.PUT("/:id", deps.CategoryHandler.Update)
 		categories.DELETE("/:id", deps.CategoryHandler.Delete)
+	}
+
+	channels := api.Group("/channels")
+	{
+		channels.GET("/:id", deps.ChannelHandler.GetByID)
+		channels.GET("/handle/:handle", deps.ChannelHandler.GetByHandle)
+
+		authChannels := channels.Group("")
+		authChannels.Use(middleware.RequireAuth(deps.JWTService))
+		{
+			authChannels.POST("", deps.ChannelHandler.Create)
+			authChannels.GET("/me", deps.ChannelHandler.GetMyChannels)
+			authChannels.PUT("/:id", deps.ChannelHandler.Update)
+			authChannels.DELETE("/:id", deps.ChannelHandler.Delete)
+
+		}
 	}
 
 	r.GET("/health", func(c *gin.Context) {

@@ -35,6 +35,7 @@ func NewConnection(cfg *config.Config) (*gorm.DB, error) {
 		&domain.User{},
 		&domain.RefreshToken{},
 		&domain.Category{},
+		&domain.Channel{},
 	); err != nil {
 		return nil, fmt.Errorf("Failed to run database migrations: %w", err)
 	}

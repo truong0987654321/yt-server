@@ -19,7 +19,7 @@ func NewUserRepository(db *gorm.DB) domain.UserRepository {
 
 func (r *userRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
 	var u domain.User
-	err := r.db.WithContext(ctx).Where("email = ?", email).First(&u).Error
+	err := r.db.WithContext(ctx).Where("email = ?", email).Take(&u).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
@@ -32,7 +32,7 @@ func (r *userRepository) FindByEmail(ctx context.Context, email string) (*domain
 
 func (r *userRepository) FindByGoogleID(ctx context.Context, googleID string) (*domain.User, error) {
 	var u domain.User
-	err := r.db.WithContext(ctx).Where("google_id = ?", googleID).First(&u).Error
+	err := r.db.WithContext(ctx).Where("google_id = ?", googleID).Take(&u).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
@@ -42,9 +42,10 @@ func (r *userRepository) FindByGoogleID(ctx context.Context, googleID string) (*
 	}
 	return &u, nil
 }
+
 func (r *userRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
 	var u domain.User
-	err := r.db.WithContext(ctx).Where("id = ?", id).First(&u).Error
+	err := r.db.WithContext(ctx).Where("id = ?", id).Take(&u).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
